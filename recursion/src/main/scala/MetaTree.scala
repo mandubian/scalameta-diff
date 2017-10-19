@@ -10,12 +10,17 @@ import scalaz._, Scalaz._
 import scala.meta.contrib.implicits.Equality._
 
 
+// Label of MetaTree nodes
 sealed trait Label
 
-final case class ObjectType(tpe: String) extends Label
+// A leaf scala.meta.Tree value (Lit, Name)
 final case class ValueLabel(value: scala.meta.Tree) extends Label
 // final case class PosLabel(origin: internal.trees.Origin) extends Label
 
+// Object types (Defn.Val, Type.Param etc...)
+final case class ObjectType(tpe: String) extends Label
+
+// Object fields (keeping scala field semantic simple, list of trees, list of list of trees, optional tree)
 sealed trait FieldLabel extends Label
 final case class SimpleFieldLabel(name: String) extends FieldLabel
 final case class ListFieldLabel(name: String, nb: Int) extends FieldLabel
@@ -23,24 +28,27 @@ final case class ListListFieldLabel(name: String, nb: Int) extends FieldLabel
 final case class OptionFieldLabel(name: String, isDefined: Boolean) extends FieldLabel
 
 
-
+// The Metatree itself
 sealed trait MetaTree[+A] {
   def label: Label
-  // def fieldChildren: List[A]
 }
 
 object MetaTree extends MetaTreeCoalgebra with MetaTreeAlgebra {
 
+  // Leaf containing a Literal or Name
   final case class Leaf[+A](value: scala.meta.Tree) extends MetaTree[A] {
     val label = ValueLabel(value)
   }
 
+  // to represent full program being a List of trees
   // final case class Siblings[+A](elts: List[A]) extends MetaTree[A]
 
+  // An Object types (Defn.Val, Type.Param etc...) with its fields found in scala.meta AST 
   final case class Obj[+A](tpe: String, fields: List[Field[A]]) extends MetaTree[A] {
     val label = ObjectType(tpe)
   }
 
+  // The fields (I decided to keep scala.meta field semantic: simple, list of trees, list of list of trees, optional tree)
   sealed trait Field[+A] {
     def label: FieldLabel
   }
@@ -61,6 +69,7 @@ object MetaTree extends MetaTreeCoalgebra with MetaTreeAlgebra {
     val label = OptionFieldLabel(name, childOpt.isDefined)
   }
 
+  // Matryoshka required structures
   implicit val fieldFunctor: Functor[Field] = new Functor[Field] {
     override def map[A, B](fa: Field[A])(f: A => B) = fa match {
       case SimpleField(label, child) => SimpleField(label, f(child))

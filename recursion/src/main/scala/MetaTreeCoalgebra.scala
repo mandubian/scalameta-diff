@@ -8,6 +8,8 @@ import scalaz.std.either._
 
 import MetaTree._
 
+// Contains the Matryoshka required Coalgebra Tree => MetaTree[Tree]
+// this code is really raw and can be improved
 trait MetaTreeCoalgebra {
 
   val termParamCoalgebra: Term.Param => MetaTree[Tree] = { 

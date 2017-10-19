@@ -8,6 +8,8 @@ import scalaz.std.either._
 
 import MetaTree._
 
+// Contains the Matryoshka required Algebra MetaTree[Tree] => Tree
+// this code is really raw and can be improved
 trait MetaTreeAlgebra {
 
   def getField[A <: Tree](name: String) = StateT[MetaError, List[Field[Tree]], A] {
