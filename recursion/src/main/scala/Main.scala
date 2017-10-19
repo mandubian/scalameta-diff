@@ -26,9 +26,17 @@ object Test {
     val metaTree: Mu[MetaTree] = tree.ana[Mu[MetaTree]](MetaTree.coalgebra)
     println(s"metaTree:${ToShowOps(metaTree).show}")
 
+    /* Displays
+    metaTree:Defn.Object[mods[],name: Test,templ: Template[early[],inits[],self: Self[name: _,decltpeNone],stats[Defn.Val[mods[],pats[Pat.Var[name: a]],decltpeNone,rhs: Term.ApplyInfix[lhs: 2,op: +,targs[],args[5]]]]]]
+    */
+
     // rebuild original tree from MetaTree using catamorphism
     val cataTree: scala.meta.Tree = metaTree.cata(MetaTree.algebra)
     println(s"cataTree:$cataTree")
+
+    /* Displays
+    cataTree:object Test { val a = 2 + 5 }
+    */
 
     // check both are equal
     assert(tree.isEqual[Structurally](cataTree))
@@ -45,8 +53,9 @@ object Test {
 
     // build diff tree using Matryoshka Diff structure & funny paramerga function
     val df: Mu[Diff[Mu, MetaTree, ?]] = metaTree.paraMerga(metaTree2)(patterns.diff)
-    // here you'll see a big structure with at the end LocallyDifferent(Leaf(5),Leaf(6))
+    
     println(s"df:${df}")
+    // here you'll see a big structure with at the end LocallyDifferent(Leaf(5),Leaf(6))
 
     // displaying diff not yet formatting correctly due to inner fields
     // val drawn = df.cata(toTree).drawTree
