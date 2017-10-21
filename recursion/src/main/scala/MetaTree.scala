@@ -149,9 +149,9 @@ object MetaTree extends MetaTreeCoalgebra with MetaTreeAlgebra {
       implicit val is = s
       Show.show {
         case SimpleField(label, child) => Cord(label) ++ Cord(": ") ++ ToShowOps(child).show
-        case ListField(label, children) => Cord(label) ++ ToShowOps(children).show
-        case ListListField(label, childrens) => Cord(label) ++ ToShowOps(childrens).show
-        case OptionField(label, childOpt) => Cord(label) ++ ToShowOps(childOpt).show
+        case ListField(label, children) => Cord(label) ++ Cord(": ") ++ ToShowOps(children).show
+        case ListListField(label, childrens) => Cord(label) ++ Cord(": ") ++ ToShowOps(childrens).show
+        case OptionField(label, childOpt) => Cord(label) ++ Cord(": ") ++ ToShowOps(childOpt).show
       }
     }
   }

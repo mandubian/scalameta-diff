@@ -26,6 +26,7 @@ lazy val recursion = project.settings(
   // libraryDependencies += "ch.epfl.scala" %% "scalafix-core" % "0.5.2",
   libraryDependencies += "org.scalameta" %% "scalameta" % ScalametaVersion,
   libraryDependencies += "com.slamdata" %% "matryoshka-core" % "0.21.2",
+  libraryDependencies += "com.chuusai" %% "shapeless" % "2.3.2",
   addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.4")
 ).dependsOn(diff)
 

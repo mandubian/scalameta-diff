@@ -3,7 +3,7 @@ package fix
 
 import slamdata.Predef._
 import matryoshka._
-import matryoshka.data.{Mu}
+import matryoshka.data.{Fix}
 import matryoshka.implicits._
 import matryoshka.patterns._
 import scala.meta.contrib.implicits.Equality._
@@ -23,7 +23,7 @@ object Test {
 }"""
 
     // build recursive MetaTree from tree using an anamorphism
-    val metaTree: Mu[MetaTree] = tree.ana[Mu[MetaTree]](MetaTree.coalgebra)
+    val metaTree: Fix[MetaTree] = tree.ana[Fix[MetaTree]](MetaTree.coalgebra)
     println(s"metaTree:${ToShowOps(metaTree).show}")
 
     /* Displays
@@ -49,10 +49,10 @@ object Test {
 }"""
 
     // build recursive MetaTree from tree2 using an anamorphism
-    val metaTree2: Mu[MetaTree] = tree2.ana[Mu[MetaTree]](MetaTree.coalgebra)
+    val metaTree2: Fix[MetaTree] = tree2.ana[Fix[MetaTree]](MetaTree.coalgebra)
 
     // build diff tree using Matryoshka Diff structure & funny paramerga function
-    val df: Mu[Diff[Mu, MetaTree, ?]] = metaTree.paraMerga(metaTree2)(patterns.diff)
+    val df: Fix[Diff[Fix, MetaTree, ?]] = metaTree.paraMerga(metaTree2)(patterns.diff)
     
     println(s"df:${df}")
     // here you'll see a big structure with at the end LocallyDifferent(Leaf(5),Leaf(6))
