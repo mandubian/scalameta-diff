@@ -20,6 +20,7 @@ object Main {
     val tree: scala.meta.Tree = q"""
 object Test {  
   val a = 2 + 5
+  def f(b: String) = b
 }"""
 
     // build recursive MetaTree from tree using an anamorphism
@@ -46,6 +47,7 @@ object Test {
     val tree2: scala.meta.Tree = q"""
 object Test {  
   val a = 2 + 6
+  def f(b: String) = b + "toto"
 }"""
 
     // build recursive MetaTree from tree2 using an anamorphism

@@ -28,10 +28,13 @@ trait MetaTreeCoalgebra {
         t.productPrefix
       , t.productFields.zip(t.productIterator.toList).map {
           case (n, t) => t match {
-            case `Option[Tree]`(t) => OptionField(n, t)
-            case `List[Tree]`(t) => ListField(n, t)
-            case `List[List[Tree]]`(t) => ListListField(n, t)
             case t: Tree => SimpleField(n, t)
+            case `Option[Tree]`(t) => OptionField(n, t)
+            // In case of Nil, List[List[Tree]].unapply and List[Tree].unapply succeeds
+            // so we discriminate with the name to avoid writing many useless LoC...
+            // All List of List names end with `ss` AFAIK
+            case `List[List[Tree]]`(t) if (n.endsWith("ss")) => ListListField(n, t)
+            case `List[Tree]`(t) => ListField(n, t)
           }
         }
       )
